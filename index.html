@@ -295,7 +295,7 @@ let lang='en',cur='all',last=null,openId=null;
 try{lang=localStorage.getItem('fc-lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en')}catch(e){lang=(navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'}
 if(lang!=='zh')lang='en';
 const L=()=>T[lang];
-const get=w=>{if(lang==='en')return {...w,cap:w.im.map(m=>m[1])};const z=ZH[w.id]||{};return {||w.im.map(m=>m[1])}};
+const get=w=>{if(lang==='en')return {...w,cap:w.im.map(m=>m[1])};const z=ZH[w.id]||{};return {...w,...z,im:w.im,cap:z.im||w.im.map(m=>m[1])}};
 const render=()=>{
  document.documentElement.lang=lang==='zh'?'zh-CN':'en';
  document.title=lang==='zh'?'陈飞羽 作品集':'Feiyu Chen Portfolio';
