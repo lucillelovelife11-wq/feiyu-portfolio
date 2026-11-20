@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Feiyu Chen Portfolio</title>
+<meta name="description" content="Feiyu Chen: finance portfolio of valuation, risk, research and code.">
+<style>
+/* VOICE: confident, precise analyst; facts over adjectives
+   IDEA: a fund factsheet / research library index
+   PICTURE: the key-figures board in the first screen, each figure tied to a work
+   COLOUR and TYPE: ice ground, ink panels, one hot pink accent; system fonts so it loads fast in China and the U.S.
+   LAYOUT: name and pitch over a full-width figures board, then a filterable work index with detail sheets */
+:root{color-scheme:light dark;--bg:light-dark(#dff1f7,#06222e);--ink:light-dark(#06222e,#e6f4f9);--panel:light-dark(#ffffff,#0c3242);--line:light-dark(#b9dbe7,#1d4a5c);--muted:light-dark(#3f5f6b,#9cc3d1);--pink:#e8186b;--board:#06222e;--boardInk:#e6f4f9;
+--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);overflow-x:clip}
+a{color:inherit}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+header.band{padding-bottom:20px}
+.bar{display:flex;justify-content:flex-end;margin-bottom:8px}
+.lang{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden}
+.lang button{min-height:40px;min-width:64px;padding:0 14px;border:0;background:transparent;color:var(--ink);font:600 15px var(--sans);cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;justify-content:space-between}
+h1,h2,h3{font-family:var(--sans);letter-spacing:-.01em}
+h1{font-size:clamp(36px,5vw,52px);line-height:1.05;margin:0;text-wrap:balance}
+.pitch{font-size:17px;max-width:62ch;margin:12px 0 0;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.links a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none;font-weight:600;font-size:15px}
+.links a.main{background:var(--pink);border-color:var(--pink);color:#fff}
+a:focus-visible,button:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.board{background:var(--board);color:var(--boardInk)}
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.fig1{padding:22px 24px;border-left:1px solid #1d4a5c}.fig1:first-child{border-left:0}
+.num{font-size:clamp(34px,4.6vw,56px);font-weight:700;line-height:1;white-space:nowrap}
+.num em{font-style:normal;color:#ff4f93}
+.fl{margin-top:10px;font-size:15px;color:#bfe0ec}.fw{margin-top:6px;font-size:13px;color:#7fb0c2}
+.edu{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:22px;padding-top:18px;border-top:1px solid #1d4a5c;font-size:15px;color:#bfe0ec}
+.edu b{color:#fff;font-weight:600}
+h2{font-size:32px;line-height:1.1;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 15px var(--sans);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;display:flex;flex-direction:column;align-items:stretch;gap:8px;font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+.card:hover{border-color:var(--pink)}
+.sec{font-weight:700;font-size:14px;color:var(--pink)}
+.card h3{font-size:19px;line-height:1.3;margin:0;text-wrap:balance}
+.role{font-size:14px;color:var(--muted)}
+.card p{margin:0;font-size:15px}
+.more{font-weight:600;font-size:15px;color:var(--pink)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.tags span{font-size:13px;padding:2px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+.empty{display:none;color:var(--muted)}
+.dlg{position:fixed;inset:0;z-index:20;display:none;background:rgba(6,34,46,.6);padding:clamp(0px,3vw,40px)}
+.dlg.on{display:flex;justify-content:center;align-items:flex-start}
+.sheet{background:var(--panel);color:var(--ink);width:min(980px,100%);max-height:100%;overflow:auto;border-radius:12px;padding:clamp(18px,3vw,36px);position:relative}
+.sheet h3{font-size:clamp(24px,3vw,32px);line-height:1.15;margin:6px 0;padding-right:56px;text-wrap:balance}
+.x{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 22px var(--sans);cursor:pointer}
+.ctx{font-size:16px;margin:10px 0 0;max-width:70ch}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;margin-top:14px}
+.cols h4{margin:0 0 6px;font-size:16px}
+.cols ul{margin:0;padding-left:18px}.cols li{margin-bottom:6px;font-size:15px}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}
+.shots figure{margin:0}.shots img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px;background:#fff}
+.shots figcaption{font-size:13px;color:var(--muted);margin-top:4px}
+.note{font-size:14px;color:var(--muted);margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.nav2{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.nav2 button{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 15px var(--sans);cursor:pointer}
+footer{border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;font-size:15px;color:var(--muted)}
+@media(max-width:900px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}.fig1:nth-child(3){border-left:0}.fig1:nth-child(n+3){border-top:1px solid #1d4a5c}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.grid,.cols,.shots{grid-template-columns:minmax(0,1fr)}.fig1{padding:16px 14px}.fw{display:none}.dlg{padding:0}.sheet{border-radius:0;min-height:100%}}
+@media(prefers-reduced-motion:no-preference){.card{transition:transform .15s,border-color .15s}.card:hover{transform:translateY(-2px)}}
+</style></head><body>
+<header class="band"><div class="wrap">
+ <div class="bar"><div class="lang" role="group" aria-label="Language"><button type="button" id="l-en" data-l="en">EN</button><button type="button" id="l-zh" data-l="zh">中文</button></div></div>
+ <div class="top">
+  <div><h1 data-i="name"></h1><p class="pitch" data-i="pitch"></p></div>
+  <nav class="links" aria-label="Links"><a class="main" href="https://feiyu-finsight.netlify.app" data-i="app"></a><a href="https://www.linkedin.com/in/feiyu-chen-549090434/">LinkedIn</a></nav>
+ </div>
+</div></header>
+<section class="band board"><div class="wrap">
+ <div class="figs">
+  <div class="fig1"><div class="num">95.1<em>%</em></div><div class="fl" data-i="f1"></div><div class="fw" data-i="f1w"></div></div>
+  <div class="fig1"><div class="num">67,649</div><div class="fl" data-i="f2"></div><div class="fw" data-i="f2w"></div></div>
+  <div class="fig1"><div class="num">7,733</div><div class="fl" data-i="f3"></div><div class="fw" data-i="f3w"></div></div>
+  <div class="fig1"><div class="num">74<em>/</em>74</div><div class="fl" data-i="f4"></div><div class="fw" data-i="f4w"></div></div>
+ </div>
+ <div class="edu"><span data-i="e1"></span><span data-i="e2"></span><span data-i="e3"></span></div>
+</div></section>
+<main class="band"><div class="wrap">
+ <h2 data-i="lib"></h2><p class="sub" data-i="libsub"></p>
+ <div class="chips" role="group" id="chips"></div>
+ <div class="grid" id="grid"></div>
+ <p class="empty" id="empty" data-i="none"></p>
+</div></main>
+<footer class="band"><div class="wrap"><span data-i="mail"></span><span data-i="req"></span><span data-i="loc"></span></div></footer>
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="sheet" id="sheet"></div></div>
+<script>{
+const W=[
+ {id:'1-1',s:'1.1',t:'AI-Labeled News Sentiment and Price Outlook for Lithium, Polysilicon and Industrial Silicon',r:'Huajin Futures · sole author',p:'Built a crawl, LLM-label, spot-check and iterate workflow: 3,436 news items, 95.1% directional accuracy; end-June polysilicon and industrial-silicon calls confirmed ex post.',k:['research','data','risk'],
+  c:'A working paper written during my data research internship at Huajin Futures (May–June 2026), testing whether AI-labeled news sentiment can support price outlooks for three new-energy commodities.',
+  d:['Crawled industry-chain news daily in Python; de-duplicated and filtered 3,436 items into a 2,984-item analysis sample in 23 working days.','Wrote the labeling guideline: 8 bullish and 8 bearish reasons, 3 neutral cases, and cross-commodity transmission rules for the two silicons.','Fed spot-check errors back into the prompts until directional accuracy passed the analysis threshold.'],
+  o:['95.1% directional accuracy on 426 random checks (95% CI 92.6%–96.8%).','Lithium sentiment moved with same-week prices (correlation 0.32, 76% same direction).','End-June calls on a policy-driven polysilicon rebound and range-bound industrial silicon were both confirmed; polysilicon was up about 23% by October.'],
+  tl:'Python, LLM labeling, statistics',im:[['p6','Labeling rules and quality control'],['p12','Silicon sentiment structure and drivers']]},
+ {id:'1-2',s:'1.2',t:'Equity Incentives in China’s A-Share Market, 2025',r:'Huana Consulting · two-person team',p:'Turned 20 years of Wind data (5,800+ plans, 3,172 firms) into client-ready findings; designed the field definitions and charts.',k:['research','data'],
+  c:'An annual research report on A-share equity incentive plans, written with my direct manager for a consulting client.',
+  d:['Extracted 20 years of Wind data covering 5,800+ plans and 3,172 companies.','Chose the fields that matter to clients and defined the statistical rules behind every chart.','Built the charts and drafted parts of the text.'],
+  o:['A readable report that turns a large database into clear takeaways on how incentive plans have evolved.','The same topic became my master’s thesis: an 8-table database of 7,733 plans and difference-in-differences tests of the registration reform.'],
+  tl:'Wind, Excel, data visualization',im:[]},
+ {id:'1-3',s:'1.3',t:'Strategy Study of the Recruitment Industry for 58.com',r:'Consulting · project lead',p:'53-page report: needs-driven benchmarking of 11 HR firms and 15 blue-collar recruiters, with an opportunity matrix.',k:['research','strategy'],
+  c:'A strategy study of China’s recruitment industry for 58.com’s recruiting business.',
+  d:['Turned the client’s pain points into comparable questions before choosing peers.','Set a business-model baseline from 11 Chinese and international HR companies and compared 15 blue-collar recruitment platforms.','Built a GE replicability matrix and an opportunity matrix.'],
+  o:['Pointed to three growth areas: blue-collar hiring, RPO and SMEs (blue-collar online hiring expected to reach 60.7% of the market in 2026).','Delivered a 53-page report with differentiated strategy recommendations.'],
+  tl:'Industry research, benchmarking, PowerPoint',im:[]},
+ {id:'1-4',s:'1.4',t:'International Trends in Producer Services and Shanghai’s Upgrading',r:'UNIDO ITPO Shanghai · research and drafting',p:'Forum remarks for the Head of Office, expanded into a working paper with 5 policy actions and 2030 targets.',k:['research','strategy'],
+  c:'Research and remarks prepared for the Head of the UNIDO Investment and Technology Promotion Office in Shanghai for the 2025 Shanghai International Think Tank Forum.',
+  d:['Built the analytical framework and benchmarked Shanghai’s producer services on UNIDO data.','Diagnosed achievements, gaps and root causes.','Expanded the remarks into a full working paper.'],
+  o:['Five actions for Shanghai from UNIDO’s perspective, with quantified 2030 targets and an implementation roadmap.'],
+  tl:'Policy research, UNIDO data, writing',im:[['p31','Capability framework'],['p44','From diagnosis to actions']]},
+ {id:'1-5',s:'1.5',t:'East Asian Openness and the International Monetary System',r:'SUFE course paper · team, sole author of part 3',p:'Compared three empirical models linking openness to growth, inflation and exchange-rate volatility; presented live.',k:['research','risk'],
+  c:'A course project on how openness affects East Asia and Pacific economies, with a 2025–2026 update on renminbi internationalization.',
+  d:['Wrote part 3 on my own and presented it live.','Compared three empirical models of openness against GDP, inflation and exchange-rate volatility.','Mapped the region’s choices onto Mundell’s impossible triangle.'],
+  o:['Showed why highly open economies such as Singapore and Korea choose different exchange-rate and capital-account arrangements, and how external shocks spread.'],
+  tl:'Macroeconomics, empirical comparison',im:[['p59','The trilemma mapping'],['p61','Country comparison']]},
+ {id:'1-6',s:'1.6',t:'Invest in Her: Inclusive Growth in Shipping',r:'UNIDO ITPO Shanghai · speech deck',p:'A 20-slide speech deck on technology, innovation and women in the shipping industry.',k:['strategy'],
+  c:'A speech deck prepared for UNIDO ITPO Shanghai on technology and innovation for inclusive growth in shipping.',
+  d:['Structured the storyline from challenges to UNIDO’s tools to concrete actions.','Researched the data and wrote the slide text.'],
+  o:['A 20-slide deck ready for delivery at an industry event.'],
+  tl:'Storytelling, PowerPoint',im:[['p65','Opening'],['p67','Storyline']]},
+ {id:'2-1',s:'2.1',t:'From Three Statements to DCF: Meitu and Delta Air Lines',r:'Longling Investment and WashU ACCT 5031',p:'Three-stage DCF for Meitu (WACC 11%), comparables range for an early-stage deal, cash-runway alerts; Delta FCFE value of $69.46 vs. an $86.55 price.',k:['valuation','risk'],
+  c:'Valuation work from a VC internship and a WashU financial statement analysis project.',
+  d:['Built a three-stage DCF for Meitu (1357.HK) as a sector anchor: WACC 11%, about RMB 29bn equity value, with sensitivity tables.','Set a RMB 57–86m pre-money range for an early-stage deal with PS comparables and a 35% liquidity discount.','Set up cash-runway alerts (12-month watch, 6-month red line) and compared anti-dilution terms (full ratchet +25% vs. weighted average +1.8% conversion shares).','Delta: built a 7-airline database from SEC filings and separated operating from financing returns.'],
+  o:['Delta RNOA 13.85% vs. United 11.52%; removing a $1.2bn one-off gain cut ROE from 27.69% to 22.27%.','Correcting template assumptions turned the call from undervalued to slightly overvalued ($69.46 vs. $86.55).'],
+  tl:'Excel, DCF, comparables, SEC data',im:[['p78','Cash-runway alerts'],['p81','Correcting formulaic DCF errors']]},
+ {id:'2-1-5',s:'2.1.5',t:'FinSight: SEC-Connected Financial Analysis App',r:'Sole designer and builder',p:'Nine modules from SEC 10-K data, three-layer data retrieval checked on 20 companies, 74 passing regression tests.',k:['valuation','data'],u:'https://feiyu-finsight.netlify.app',
+  c:'A web app I designed and built outside class. Enter a U.S. ticker and it reads SEC 10-K data and walks through strategy, accounting, financial analysis and valuation.',
+  d:['Built 9 modules: formula library, DuPont, operating returns, earnings quality, DCF, linked three statements, accounting cases and a 12-question diagnosis.','Designed three-layer data retrieval (standard tags, component sums, statement-line matching) and checked it on 20 companies.','Every number shows its source; missing values stay blank rather than estimated.'],
+  o:['14 test files and 74 regression tests pass.','Live, bilingual and installable offline.'],
+  tl:'JavaScript, SEC EDGAR API, testing',im:[['p82','Product overview'],['p84','Modules and data logic']]},
+ {id:'2-2',s:'2.2',t:'VCIC Campus Round Winning Entry',r:'Team member · executive summary author',p:'Early-stage due diligence on Applix, Hypno Loops and Silvr, and the winning investment memo.',k:['valuation','strategy'],
+  c:'Venture Capital Investment Competition, campus round at Washington University in St. Louis.',
+  d:['Evaluated three early-stage startups as a VC team.','Wrote the executive summary of the investment memo.'],
+  o:['Our team won the campus round.'],
+  tl:'Due diligence, investment memo',im:[['p87','Investment memo']]},
+ {id:'2-3',s:'2.3',t:'AI × Industry × Going Global: Early-Stage Sector Template',r:'Longling Investment',p:'A reusable one-page template (value chain, local ecosystem, entry points, risks) and 3 SaaS sector maps.',k:['valuation','strategy'],
+  c:'A research template for an early-stage VC firm that looks for AI companies expanding overseas.',
+  d:['Designed a one-page sector template built on eight investment principles.','Applied it to three going-global SaaS sectors: cross-border e-commerce visuals, AI animated short dramas and game development tools.','Screened early-stage targets with financing data collected in Python.'],
+  o:['A reusable framework; several screened targets entered the firm’s pre-approval stage.'],
+  tl:'Sector research, Python',im:[['p92','The one-page template'],['p97','From sector map to valuation']]},
+ {id:'2-4',s:'2.4',t:'Elon Musk’s Acquisition of Twitter',r:'SUFE M&A course · individual',p:'Deal motives, a comparables test of the $54.20 offer and debt service under $13bn of acquisition debt.',k:['valuation'],
+  c:'An individual case report on the $44bn take-private of Twitter.',
+  d:['Analyzed deal motives and the three types of expected synergies.','Tested the $54.20 offer price with comparable companies.','Assessed the financing structure and debt service under $13bn of acquisition debt.'],
+  o:['A full view of the deal from motive and price to financing risk, integration issues and the effect on Tesla’s share price.'],
+  tl:'M&A analysis, comparables, LBO',im:[['p100','Synergy analysis'],['p101','Financing structure']]},
+ {id:'2-5',s:'2.5',t:'Tariff Volatility Certificate: Design, Pricing and Risk Control',r:'Derivatives course · product design and editing',p:'An OTC hedge on tariff rates with tiered payouts, a 150% payout cap and stress tests; Monte Carlo jump and CRR binomial pricing.',k:['risk','valuation'],
+  c:'A three-person derivatives project: an OTC contract that lets importers and exporters hedge sudden tariff jumps. I led product design and edited the full report; teammates led pricing and risk control.',
+  d:['Set safe, alert and circuit-breaker zones from historical tariff volatility.','Designed continuous tiered payouts that pay more in extreme shocks, with a 150% cap so the seller’s tail loss is bounded.','Specified 120% seller margin and stress tests at 99% VaR over 10 days.'],
+  o:['A complete product: terms, Monte Carlo policy-jump and CRR binomial pricing, a premium range of about 1.09%–8.2%, and a risk-control plan.'],
+  tl:'Derivatives, product design, risk management',im:[['p119','Tiered payout design'],['p120','Scenario table']]},
+ {id:'2-6',s:'2.6',t:'Earnings Surprises and Post-Earnings-Announcement Drift',r:'WashU FIN 5505 · individual paper',p:'67,649 announcements: a 6.48% two-day spread (t = 28.2) and 5.95% further drift over days 3–75.',k:['research','data'],
+  c:'An individual empirical paper using Compustat, CRSP and I/B/E/S on 4,887 U.S. firms, 1995–2004.',
+  d:['Sorted 67,649 earnings announcements into 11 surprise groups each year.','Found severe outliers caused by unit and split-adjustment errors and winsorized at 0.5% and 99.5%.','Tested short-run reactions, drift and a Friday-announcement effect.'],
+  o:['Two-day market-adjusted spread of 6.48% (t = 28.2) and further drift of 5.95% over days 3–75 (t = 6.41).','The Friday effect was not significant in this sample.'],
+  tl:'Python, Compustat, CRSP, I/B/E/S',im:[['p142','Data preparation'],['p144','Return response by surprise group']]},
+ {id:'2-7',s:'2.7',t:'Geographical Indications and Carbon Reduction in Herbal Medicine Production',r:'CPCI-indexed paper · second author',p:'Propensity score matching on 451 field-survey samples; the project also won a National Third Prize in statistical modeling.',k:['research','data'],
+  c:'A National College Student Innovation Training Program project that I led, studying eucommia production in Lueyang County, Shaanxi.',
+  d:['Wrote the proposal, designed the survey and led field visits; built a database of 451 valid samples.','Used propensity score matching to estimate the effect of geographical-indication use.','Co-authored the paper as second author and contributed to a granted design patent.'],
+  o:['Paper indexed in CPCI (Web of Science).','National Third Prize, China College Students Statistical Modeling Competition (2022).'],
+  tl:'Stata, PSM, survey design',im:[['p152','Published paper']]},
+ {id:'3-1',s:'3.1',t:'Black-Litterman Rebalancing of Behavioral Anomaly Signals',r:'WashU FIN 5505 · wrote all of the code',p:'Python engine turning PEAD, momentum and capital-gains-overhang signals into constrained weekly weights.',k:['data','risk'],
+  c:'A team trading project; I wrote the full Python pipeline.',
+  d:['Turned PEAD, momentum and capital-gains-overhang signals into Black-Litterman views.','Solved a constrained optimization for weekly target weights.','Found that a clip-then-renormalize step broke the position caps and replaced it with a properly constrained solver.'],
+  o:['About 4 weeks of paper trading on live prices with roughly 6% annualized tracking error and a 5% cash buffer.'],
+  tl:'Python, NumPy, SciPy optimization',im:[['p162','Project overview'],['p167','Fixing the constraint problem']]},
+ {id:'3-2',s:'3.2',t:'Empirical Finance in Stata',r:'WashU FIN 5601',p:'Five empirical finance assignments completed in Stata.',k:['data'],
+  c:'Five English reports with do-files from Research Methods in Finance.',
+  d:['Cleaned and merged financial datasets and ran the regressions each assignment required.','Wrote up every result in report form with the code attached.'],
+  o:['A complete set of reproducible empirical work.'],
+  tl:'Stata',im:[['p173','Assignment overview']]},
+ {id:'3-3',s:'3.3',t:'Batch Report Generator in Excel VBA',r:'Huana Consulting · sole developer',p:'One macro run builds 62 individualized talent-review reports (78–91 fields each) from survey data.',k:['data','strategy'],
+  c:'An Excel VBA tool built for a consulting client’s talent review.',
+  d:['Mapped survey data to a report template, field by field.','Wrote the macro that builds every report in one run.','After a review found a typo that left fields blank, added mandatory variable declarations to prevent it.'],
+  o:['62 individualized reports from one run, replacing about 14 hours of manual work.'],
+  tl:'Excel VBA',im:[]}
+];
+const ZH={
+'1-1':{t:'AI 标注新闻情绪与碳酸锂、多晶硅、工业硅行情研判',r:'华金期货 · 独立作者',p:'搭建爬取、大模型标注、抽检、迭代的人机协同流程：处理 3,436 条资讯，方向准确率 95.1%；6 月末多晶硅、工业硅判断均获事后验证。',
+ c:'在华金期货数据研究实习期间（2026 年 5–6 月）完成的工作论文，检验 AI 标注的新闻情绪能否支持三种新能源商品的行情研判。',
+ d:['用 Python 每日爬取产业链资讯，经去重和相关性筛选，23 个工作日把 3,436 条资讯整理成 2,984 条分析样本。','制定标注规范：利多、利空各 8 类理由，中性 3 类情形，并为双硅制定跨品种传导规则。','把每日抽检发现的错误写回提示词，迭代到方向准确率达到分析门槛。'],
+ o:['426 条随机抽检方向准确率 95.1%（95% 置信区间 92.6%–96.8%）。','碳酸锂情绪与当周价格同向变动（相关系数 0.32，76% 同向）。','6 月末对多晶硅政策驱动反弹、工业硅低位震荡的判断均获验证，多晶硅 10 月价格较 6 月上涨约 23%。'],
+ tl:'Python、大模型标注、统计分析',im:['标注规范与质量控制','双硅情绪结构与驱动因素']},
+'1-2':{t:'2025 年 A 股股权激励研究报告',r:'华纳和光咨询 · 两人团队',p:'把 20 年万得数据（5,800 余份方案、3,172 家公司）做成客户读得懂的结论；负责字段设计与图表。',
+ c:'与直属上级合作为咨询客户撰写的 A 股股权激励年度研究报告。',
+ d:['从万得提取 20 年数据，覆盖 5,800 余份方案、3,172 家公司。','挑选客户关心的字段，确定每张图表背后的统计口径。','制作图表并撰写部分正文。'],
+ o:['把庞大数据库变成清晰结论，展示股权激励方案的演变。','同一主题延伸为我的硕士论文：8 张表、7,733 份方案的数据库，用双重差分检验注册制改革的影响。'],
+ tl:'万得、Excel、数据可视化',im:[]},
+'1-3':{t:'58 同城招聘行业分析及业务布局战略研究',r:'咨询项目 · 项目负责人',p:'53 页报告：以需求驱动的可比方法，对标 11 家人力资源公司和 15 家蓝领招聘平台，形成机会矩阵。',
+ c:'为 58 同城招聘业务开展的招聘行业战略研究。',
+ d:['先把客户痛点改写成可比较的问题，再选择对标对象。','建立 11 家中外人力资源公司的商业模式基线，对比 15 家蓝领招聘平台。','构建 GE 可复制性矩阵和机会矩阵。'],
+ o:['指出蓝领招聘、RPO、中小企业三大增长方向（2026 年蓝领线上招聘预计占市场 60.7%）。','交付 53 页报告，提出差异化战略建议。'],
+ tl:'行业研究、对标分析、PPT',im:[]},
+'1-4':{t:'生产性服务业国际趋势与上海功能升级',r:'联合国工发组织上海投资促进中心 · 研究与撰稿',p:'为中心主任撰写论坛发言，扩展为工作论文，提出 5 项行动和 2030 年目标。',
+ c:'为联合国工发组织上海投资促进中心主任在 2025 上海国际智库论坛的发言所做的研究与撰稿。',
+ d:['搭建分析框架，基于工发组织数据对标上海生产性服务业。','诊断上海的成绩、差距和根本原因。','把发言稿扩展成完整的工作论文。'],
+ o:['从工发组织视角为上海提出 5 项行动，配套 2030 年量化目标和实施路线图。'],
+ tl:'政策研究、工发组织数据、写作',im:['能力框架','从诊断到行动']},
+'1-5':{t:'东亚太平洋经济体开放度与国际货币体系',r:'上财课程论文 · 团队，独立负责第三部分',p:'比较三组实证模型，分析开放度与经济增长、通胀、汇率波动的关系；现场汇报。',
+ c:'关于开放度如何影响东亚和太平洋经济体的课程项目，并补充 2025–2026 年人民币国际化的最新进展。',
+ d:['独立完成第三部分并现场汇报。','比较开放度与 GDP、通胀、汇率波动的三组实证模型。','把各经济体的实际选择映射到蒙代尔「不可能三角」上。'],
+ o:['说明新加坡、韩国等高度开放的经济体为何选择不同的汇率和资本账户安排，以及外部冲击如何传导。'],
+ tl:'宏观经济、实证比较',im:['不可能三角映射','国家比较']},
+'1-6':{t:'Invest in Her：航运业包容性增长主题演讲稿',r:'联合国工发组织上海投资促进中心 · 演讲稿',p:'20 页演讲稿，主题是科技创新与女性力量推动航运业包容性增长。',
+ c:'为工发组织上海投资促进中心制作的航运业包容性增长主题演讲稿。',
+ d:['梳理从挑战到工发组织工具再到具体行动的叙事主线。','完成资料研究并撰写幻灯片文字。'],
+ o:['完成一份可直接用于行业活动演讲的 20 页演讲稿。'],
+ tl:'叙事设计、PPT',im:['开场','叙事主线']},
+'2-1':{t:'从三张报表到 DCF：美图与达美航空估值实践',r:'隆领投资与 WashU ACCT 5031',p:'美图三阶段 DCF（WACC 11%）、早期项目可比估值区间、现金跑道预警；达美 FCFE 估值 69.46 美元，股价 86.55 美元。',
+ c:'来自早期风投实习和 WashU 财务报表分析课程项目的估值工作。',
+ d:['以美图（1357.HK）为赛道估值锚搭建三阶段 DCF：WACC 11%，股权价值约 291 亿元，含敏感性分析。','用 PS 可比法叠加 35% 流动性折价，为早期项目给出 5,700 万–8,600 万元投前估值区间。','建立现金跑道预警（12 个月关注、6 个月红线），对比反稀释条款（完全棘轮多转股 25%，加权平均约 1.8%）。','达美：用 SEC 数据搭建 7 家航司数据库，拆分经营回报与融资回报。'],
+ o:['达美 RNOA 13.85%，美联航 11.52%；剔除 12 亿美元一次性收益后，ROE 由 27.69% 降至 22.27%。','修正模板化假设后，结论由「低估」翻转为「小幅高估」（69.46 美元对 86.55 美元）。'],
+ tl:'Excel、DCF、可比公司法、SEC 数据',im:['现金跑道预警','修正模板化 DCF 的错误']},
+'2-1-5':{t:'FinSight：对接 SEC 的财务分析工具',r:'独立设计与开发',p:'基于 SEC 10-K 数据的 9 个分析模块，三层取数逻辑经 20 家公司校验，74 个回归测试全部通过。',
+ c:'我在课外独立设计开发的网页工具。输入美股代码，自动读取 SEC 10-K 数据，按战略、会计、财务分析、估值四步完成分析。',
+ d:['开发 9 个模块：公式库、杜邦分析、经营资产回报、盈利质量、DCF、三表联动、会计案例、12 问引导诊断。','设计标准标签、分项加总、报表行匹配三层取数逻辑，经 20 家公司校验。','每个数值标注来源，取不到的留空，不做估算。'],
+ o:['14 个测试文件、74 个回归测试全部通过。','已上线，中英双语，可离线安装。'],
+ tl:'JavaScript、SEC EDGAR 接口、自动化测试',im:['产品概览','模块与取数逻辑']},
+'2-2':{t:'VCIC 风险投资竞赛校园赛优胜作品',r:'团队成员 · 执行摘要作者',p:'对 Applix、Hypno Loops、Silvr 三家初创公司做尽调，形成优胜投资备忘录。',
+ c:'圣路易斯华盛顿大学风险投资竞赛（VCIC）校园赛。',
+ d:['作为风投团队评估三家初创公司。','撰写投资备忘录的执行摘要。'],
+ o:['团队获得校园赛优胜。'],
+ tl:'尽职调查、投资备忘录',im:['投资备忘录']},
+'2-3':{t:'AI × 产业 × 出海：早期赛道研究模板',r:'隆领投资',p:'可复用的一页式赛道模板（产业链、本地生态、切入点、风险），并完成 3 张 SaaS 赛道图谱。',
+ c:'为一家关注 AI 出海企业的早期风投机构设计的研究模板。',
+ d:['基于 8 条投资原则设计一页式赛道模板。','用于三个出海 SaaS 赛道：跨境电商视觉、AI 动画短剧、游戏研发与发行工具。','用 Python 抓取融资数据筛选早期标的。'],
+ o:['形成可复用的研究框架，多家筛选标的进入投资预立项环节。'],
+ tl:'赛道研究、Python',im:['一页式模板','从赛道图谱到估值']},
+'2-4':{t:'马斯克收购 Twitter 案例分析',r:'上财并购课程 · 个人作品',p:'分析交易动机，用可比公司法检验 54.20 美元报价，测算 130 亿美元收购债务下的偿债能力。',
+ c:'关于 440 亿美元私有化 Twitter 的个人案例报告。',
+ d:['分析交易动机和三类预期协同效应。','用可比公司法检验 54.20 美元报价是否合理。','评估融资结构和 130 亿美元收购债务下的偿债压力。'],
+ o:['从动机、价格到融资风险、整合问题和对特斯拉股价的影响，完整拆解这笔交易。'],
+ tl:'并购分析、可比公司法、杠杆收购',im:['协同效应分析','融资结构']},
+'2-5':{t:'关税波动对冲凭证（TVC）：设计、定价与风控',r:'衍生品课程 · 产品设计与统稿',p:'以关税税率为标的的场外对冲产品：分段赔付、150% 赔付上限和压力测试；蒙特卡洛跳跃模拟与 CRR 二叉树定价。',
+ c:'三人衍生品课程项目：一份帮助进出口企业对冲关税突变的场外合约。我负责产品设计并统稿全文，定价和风控由组员主笔。',
+ d:['按历史关税波动划分安全区、警戒区和熔断区。','设计连续的分段赔付：冲击越极端赔得越足，同时设 150% 上限，给卖方尾部损失封顶。','规定卖方 120% 保证金，并用 99% VaR、10 天持有期做压力测试。'],
+ o:['形成完整产品：条款、蒙特卡洛政策跳跃与 CRR 二叉树定价、约 1.09%–8.2% 的费率区间和风控方案。'],
+ tl:'衍生品、产品设计、风险管理',im:['分段赔付设计','情景测算表']},
+'2-6':{t:'盈余意外、公告后漂移与投资者注意力',r:'WashU FIN 5505 · 个人论文',p:'67,649 次盈余公告：两日收益价差 6.48%（t = 28.2），第 3–75 日继续漂移 5.95%。',
+ c:'基于 Compustat、CRSP 和 I/B/E/S 数据、覆盖 1995–2004 年 4,887 家美国公司的个人实证论文。',
+ d:['每年把 67,649 次盈余公告按意外程度分成 11 组。','发现由单位和拆股调整错误造成的严重极端值，在 0.5% 和 99.5% 处缩尾。','检验短期反应、公告后漂移和周五公告效应。'],
+ o:['两日市场调整收益价差 6.48%（t = 28.2），第 3–75 日继续漂移 5.95%（t = 6.41）。','周五效应在本样本中不显著。'],
+ tl:'Python、Compustat、CRSP、I/B/E/S',im:['数据准备','各组的收益反应']},
+'2-7':{t:'地理标志有效使用对中药生产碳减排的影响',r:'CPCI 收录论文 · 第二作者',p:'基于 451 份实地调研样本做倾向得分匹配；项目还获全国大学生统计建模大赛国家三等奖。',
+ c:'由我担任负责人的国家级大学生创新创业训练项目，研究对象是陕西略阳县杜仲生产。',
+ d:['撰写申报书、设计问卷、组织实地走访，建立 451 份有效样本的数据库。','用倾向得分匹配估计地理标志使用的影响。','以第二作者完成论文，并参与一项已授权的外观设计专利。'],
+ o:['论文被 CPCI（Web of Science）收录。','获 2022 年全国大学生统计建模大赛国家三等奖。'],
+ tl:'Stata、倾向得分匹配、问卷设计',im:['已发表论文']},
+'3-1':{t:'Python：行为金融异象组合的 Black-Litterman 再平衡',r:'WashU FIN 5505 · 负责全部代码',p:'用 Python 把公告后漂移、动量和资本利得悬置信号转成带约束的周度目标权重。',
+ c:'小组交易项目，我编写了完整的 Python 流程。',
+ d:['把三类异象信号转化为 Black-Litterman 观点。','求解带约束的优化问题，得到周度目标权重。','发现「先截断再归一化」会让持仓上限失效，改为真正的约束优化。'],
+ o:['用真实行情模拟交易约 4 周，年化跟踪误差约 6%，保留 5% 现金。'],
+ tl:'Python、NumPy、SciPy 优化',im:['项目概览','修正约束问题']},
+'3-2':{t:'Stata 实证金融作业',r:'WashU FIN 5601',p:'用 Stata 完成的五份实证金融作业。',
+ c:'金融研究方法课程的五份英文报告及代码。',
+ d:['按每份作业要求清洗、合并金融数据并完成回归。','把结果写成报告并附上代码。'],
+ o:['一套可复现的实证作业。'],
+ tl:'Stata',im:['作业概览']},
+'3-3':{t:'Excel VBA 人才盘点报告批量生成工具',r:'华纳和光咨询 · 独立开发',p:'运行一次宏，从调研数据生成 62 份个性化人才盘点报告（每份 78–91 个字段）。',
+ c:'为咨询客户的人才盘点开发的 Excel VBA 工具。',
+ d:['把调研数据逐字段对应到报告模板。','编写一键生成全部报告的宏。','复盘发现变量拼写错误导致漏填后，改为强制声明变量。'],
+ o:['运行一次生成 62 份个性化报告，替代约 14 小时的手工工作。'],
+ tl:'Excel VBA',im:[]}
+};
+
+const T={
+en:{name:'Feiyu Chen',pitch:'Finance graduate student who turns messy data into investment and business decisions: valuation, risk (FRM Part I &amp; II passed), research at scale and tools people actually use. Seeking full-time roles from June 2027.',app:'Live app: FinSight',
+f1:'verified accuracy on 426 spot checks of LLM-labeled commodity news',f1w:'Work 1.1',f2:'U.S. earnings announcements tested for post-earnings drift',f2w:'Work 2.6',f3:'equity incentive plans in my 8-table thesis database',f3w:'Thesis and Work 1.2',f4:'regression tests passing in FinSight, built from SEC 10-K data',f4w:'Work 2.1.5',
+e1:'<b>WashU Olin</b> M.S. Corporate Finance &amp; Investments (STEM), GPA 4.0, 2027',e2:'<b>SUFE</b> M.S. Finance, GPA 3.8, top 1%, 2027',e3:'<b>FRM</b> Part I &amp; II passed',
+lib:'Portfolio library',libsub:'17 works across research, investment and code. Filter by the kind of role you are hiring for, then open any work for details and sample pages.',none:'No works match this filter.',
+mail:'Email: cfeiyu@wustl.edu',req:'Full Portfolio Library (PDF) and original files available on request.',loc:'St. Louis, MO',
+work:'Work',view:'View details',viewp:'View details and sample pages',did:'What I did',res:'Results',open:'Open the live app',page:'page from the Portfolio Library',client:'Client work: sample pages are shared on request.',prev:'Previous work',next:'Next work',close:'Close',
+F:{all:'All works',valuation:'Valuation & investing',research:'Research',risk:'Risk',data:'Data & code',strategy:'Strategy & consulting'}},
+zh:{name:'陈飞羽',pitch:'金融硕士在读，擅长把杂乱的数据变成投资和业务决策：估值、风险管理（FRM 一级、二级已通过）、规模化研究，以及真正有人用的工具。求职方向：2027 年 6 月起的全职岗位。',app:'在线工具：FinSight',
+f1:'大模型标注大宗商品资讯，426 条抽检方向准确率',f1w:'作品 1.1',f2:'检验公告后漂移的美国盈余公告数量',f2w:'作品 2.6',f3:'硕士论文 8 张表数据库中的股权激励方案',f3w:'硕士论文与作品 1.2',f4:'FinSight 回归测试全部通过（基于 SEC 10-K 数据）',f4w:'作品 2.1.5',
+e1:'<b>圣路易斯华盛顿大学奥林商学院</b> 公司金融与投资硕士（STEM），GPA 4.0，2027 年毕业',e2:'<b>上海财经大学</b> 金融硕士，GPA 3.8，专业前 1%，2027 年毕业',e3:'<b>FRM</b> 一级、二级已通过',
+lib:'作品集',libsub:'17 项作品，涵盖研究、投资与编程。可按岗位类型筛选，点开任一作品查看详情和样页。',none:'没有符合条件的作品。',
+mail:'邮箱：cfeiyu@wustl.edu',req:'完整作品集 PDF 及原始文件可按需提供。',loc:'美国密苏里州圣路易斯',
+work:'作品',view:'查看详情',viewp:'查看详情和样页',did:'我做了什么',res:'成果',open:'打开在线工具',page:'作品集原文页',client:'客户项目：样页可按需提供。',prev:'上一项',next:'下一项',close:'关闭',
+F:{all:'全部作品',valuation:'估值与投资',research:'研究',risk:'风险',data:'数据与编程',strategy:'战略与咨询'}}};
+const KEYS=['all','valuation','research','risk','data','strategy'];
+const $=id=>document.getElementById(id);
+const chips=$('chips'),grid=$('grid'),empty=$('empty'),dlg=$('dlg'),sheet=$('sheet');
+let lang='en',cur='all',last=null,openId=null;
+try{lang=localStorage.getItem('fc-lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en')}catch(e){lang=(navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'}
+if(lang!=='zh')lang='en';
+const L=()=>T[lang];
+const get=w=>{if(lang==='en')return {...w,cap:w.im.map(m=>m[1])};const z=ZH[w.id]||{};return {...w,...z,cap:z.im||w.im.map(m=>m[1])}};
+const render=()=>{
+ document.documentElement.lang=lang==='zh'?'zh-CN':'en';
+ document.title=lang==='zh'?'陈飞羽 作品集':'Feiyu Chen Portfolio';
+ document.querySelectorAll('[data-i]').forEach(el=>{el.innerHTML=L()[el.dataset.i]});
+ document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang));
+ chips.innerHTML=KEYS.map(k=>`<button type="button" class="chip" id="f-${k}" aria-pressed="${k===cur}" data-f="${k}">${L().F[k]}</button>`).join('');
+ const list=W.filter(w=>cur==='all'||w.k.includes(cur)).map(get);
+ grid.innerHTML=list.map(w=>`<button type="button" class="card" data-id="${w.id}"><span class="sec">${L().work} ${w.s}</span><h3>${w.t}</h3><span class="role">${w.r}</span><p>${w.p}</p><span class="more">${w.im.length?L().viewp:L().view} →</span><span class="tags">${w.k.map(k=>`<span>${L().F[k]}</span>`).join('')}</span></button>`).join('');
+ empty.style.display=list.length?'none':'block';
+ if(openId)open(openId,true);
+};
+const open=(id,keep)=>{
+ const i=W.findIndex(w=>w.id===id); if(i<0)return; const w=get(W[i]); openId=id;
+ sheet.innerHTML=`<button type="button" class="x" id="close" aria-label="${L().close}">×</button>
+ <div class="sec">${L().work} ${w.s}</div><h3 id="dt">${w.t}</h3><div class="role">${w.r} · ${w.tl}</div>
+ <p class="ctx">${w.c}</p>
+ <div class="cols"><div><h4>${L().did}</h4><ul>${w.d.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><h4>${L().res}</h4><ul>${w.o.map(x=>`<li>${x}</li>`).join('')}</ul>${w.u?`<p><a class="more" href="${w.u}">${L().open} →</a></p>`:''}</div></div>
+ ${w.im.length?`<div class="shots">${w.im.map((m,j)=>`<figure><img src="${m[0]}.jpg" alt="${w.cap[j]||''}"><figcaption>${w.cap[j]||''}${lang==='zh'?'（'+L().page+'）':' ('+L().page+')'}</figcaption></figure>`).join('')}</div>`:`<p class="note">${L().client}</p>`}
+ <div class="nav2"><button type="button" id="prev">← ${L().prev}</button><button type="button" id="next">${L().next} →</button></div>`;
+ dlg.classList.add('on'); document.body.style.overflow='hidden';
+ if(!keep){sheet.scrollTop=0;$('close').focus()}
+};
+const close=()=>{dlg.classList.remove('on');openId=null;document.body.style.overflow='';if(last)last.focus()};
+document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lang=b.dataset.l;try{localStorage.setItem('fc-lang',lang)}catch(err){}render()});
+chips.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.f;render()});
+grid.addEventListener('click',e=>{const b=e.target.closest('.card');if(!b)return;last=b;open(b.dataset.id)});
+sheet.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+ if(t.id==='close')return close();
+ const i=W.findIndex(w=>w.id===openId);
+ if(t.id==='prev')open(W[(i-1+W.length)%W.length].id);
+ if(t.id==='next')open(W[(i+1)%W.length].id);});
+dlg.addEventListener('click',e=>{if(e.target===dlg)close()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&dlg.classList.contains('on'))close()});
+render();
+}</script>
+</body></html>
